@@ -1,16 +1,16 @@
 import express from 'express';
 import pino from 'pino-http';
+import cors from 'cors';
 
 const app = express();
 
 app.use(pino({
     transport: {
-        target: 'pino-pretty', // Модуль для форматирования логов
-        options: {
-            colorize: true // Раскрашивает логи для удобства чтения
-        }
+        target: 'pino-pretty',
     }
 }));
+
+app.use(cors());
 
 app.get('/', (req, res, next) => {
 res.send('Hello word');

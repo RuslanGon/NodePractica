@@ -16,7 +16,11 @@ app.get('/', (req, res, next) => {
 res.send('Hello word');
 });
 
-app.listen(3000, () => {
+app.use((req, res, next) => {
+res.status(404).send('Oops, Route is not found');
+});
 
+
+app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });

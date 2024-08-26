@@ -1,9 +1,8 @@
-
 {
   "name": "nodejs-basics",
   "version": "1.0.0",
   "description": "",
-  "type":"module",
+  "type": "module",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src/**/*.js",
@@ -18,5 +17,8 @@
     "eslint": "^9.2.0",
     "globals": "^15.1.0",
     "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
   }
 }

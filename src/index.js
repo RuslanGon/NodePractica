@@ -1,10 +1,16 @@
 import express from 'express';
+import pino from 'pino-http';
 
 const app = express();
 
-app.use((req, res, next) => {
-
-})
+app.use(pino({
+    transport: {
+        target: 'pino-pretty', // Модуль для форматирования логов
+        options: {
+            colorize: true // Раскрашивает логи для удобства чтения
+        }
+    }
+}));
 
 app.get('/', (req, res, next) => {
 res.send('Hello word');

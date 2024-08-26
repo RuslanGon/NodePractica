@@ -2,6 +2,10 @@ import express from 'express';
 
 const app = express();
 
+app.use((req, res, next) => {
+
+})
+
 app.get('/', (req, res, next) => {
 res.send('Hello word');
 });

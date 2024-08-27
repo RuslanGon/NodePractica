@@ -5,32 +5,38 @@ import { env } from './utils/env.js';
 import { ENV_VARS } from './constants/index.js';
 import { notFoundMiddleware } from './middlewares/notFoutdMiddleware.js';
 import { errorhandlerMiddleware } from './middlewares/errorhandlerMiddleware.js';
-
+import { getAllStudents } from './services/students.js';
 
 export const startServer = () => {
+  const app = express();
 
-    const app = express();
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
 
-    app.use(pino({
-        transport: {
-            target: 'pino-pretty',
-        }
-    }));
+  app.use(cors());
 
-    app.use(cors());
-
-    app.get('/', (req, res, next) => {
-    res.send('Hello word');
+  app.get('/students',async (req, res, next) => {
+    const students =  await getAllStudents();
+    res.json({
+        status: 200,
+        message: 'successfully get all students',
+        data: students
     });
+  });
 
-    app.use(notFoundMiddleware);
+  app.get('/students/:studentId', (req, res, next) => {});
 
-    app.use(errorhandlerMiddleware);
+  app.use(notFoundMiddleware);
 
-    const PORT = env(ENV_VARS.PORT, 3000);
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
+  app.use(errorhandlerMiddleware);
 
+  const PORT = env(ENV_VARS.PORT, 3000);
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 };
-

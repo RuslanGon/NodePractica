@@ -46,7 +46,7 @@ export const getStudentsController = async (req, res, next) => {
   export const patchStudentController = async (req, res, next) => {
     const { body } = req;
     const { studentId } = req.params;
-    const student = await patchStudent(studentId, body);
+    const { student } = await patchStudent(studentId, body);
     res.status(200).json({
         status: 200,
         message: `successfully patched student`,
@@ -54,4 +54,18 @@ export const getStudentsController = async (req, res, next) => {
     });
   };
 
+
+  export const putStudentController = async (req, res, next) => {
+    const { body } = req;
+    const { studentId } = req.params;
+    const { isNew, student } = await patchStudent(studentId, body, {
+      upsert: true,
+    });
+    const status = isNew ? 201 : 200;
+    res.status(status).json({
+      status: status,
+      message: `successfully put student`,
+      data: student,
+    });
+  };
 

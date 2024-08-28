@@ -22,12 +22,18 @@ export const deleteStudent = async (studentId) => {
   await Student.findByIdAndDelete(studentId);
 };
 
-export const patchStudent = async (id, payload) => {
-  const student = await Student.findById(id, payload, {
-    new: true
+export const patchStudent = async (id, payload, options = {}) => {
+  const rawResult = await Student.findByIdAndUpdate(id, payload, {
+    new: true,
+    includeResultMetadata: true,
+    ...options,
   });
-  if(!student) {
+  if (!rawResult && rawResult.value) {
     throw createHttpError(404, 'Student not found');
-    }
-  return student;
+  }
+  return {
+    student: rawResult.value,
+    isNew: !rawResult?.lastErrorObject?.updatedExisting
+};
+
 };

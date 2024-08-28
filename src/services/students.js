@@ -21,3 +21,10 @@ export const createStudent = async (payload) => {
 export const deleteStudent = async (studentId) => {
   await Student.findByIdAndDelete(studentId);
 };
+
+export const patchStudent = async (id, payload) => {
+  const student = await Student.findById(id, payload, {
+    new: true
+  });
+  return student;
+};

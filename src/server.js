@@ -20,6 +20,8 @@ export const startServer = () => {
 
   app.use(cors());
 
+  app.use(express.json());
+
   app.use(studentsRouter);
 
   app.use(notFoundMiddleware);

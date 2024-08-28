@@ -12,3 +12,11 @@ throw createHttpError(404, 'Student not found');
 }
 return student;
 };
+
+export const createStudent = async(payload) => {
+    const student =  await Student.findById(payload);
+    if(!student) {
+    throw createHttpError(404, 'Student not found');
+    }
+    return student;
+    };

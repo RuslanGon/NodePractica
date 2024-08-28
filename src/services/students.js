@@ -26,5 +26,8 @@ export const patchStudent = async (id, payload) => {
   const student = await Student.findById(id, payload, {
     new: true
   });
+  if(!student) {
+    throw createHttpError(404, 'Student not found');
+    }
   return student;
 };

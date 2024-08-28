@@ -28,7 +28,7 @@ export const patchStudent = async (id, payload, options = {}) => {
     includeResultMetadata: true,
     ...options,
   });
-  if (!rawResult && rawResult.value) {
+  if (!rawResult || rawResult.value) {
     throw createHttpError(404, 'Student not found');
   }
   return {

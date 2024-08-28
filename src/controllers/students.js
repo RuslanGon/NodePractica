@@ -1,4 +1,4 @@
-import { createStudent, getAllStudents, getStudentById } from "../services/students.js";
+import { createStudent, deleteStudent, getAllStudents, getStudentById } from "../services/students.js";
 
 export const getStudentsController = async (req, res, next) => {
     const students =  await getAllStudents();
@@ -36,4 +36,10 @@ export const getStudentsController = async (req, res, next) => {
         message: `successfully created student`,
         data: student
     });
+  };
+
+  export const deleteStudentController = async (req, res, next) => {
+    const id = req.params.studentId;
+    await deleteStudent(id);
+    res.status(204).send();
   };

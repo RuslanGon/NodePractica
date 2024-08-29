@@ -12,6 +12,7 @@ import { ctrlWrapper } from '../middlewares/ctrlWrapper.js';
 import { validateMongoId } from '../middlewares/validateMongoId.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { createStudentSchema } from '../validation/createStudentSchema.js';
+import { patchStudentSchema } from '../validation/patchStudentSchema.js';
 
 const studentsRouter = Router();
 
@@ -28,6 +29,7 @@ studentsRouter.post('/students', validateBody(createStudentSchema), ctrlWrapper(
 
 studentsRouter.patch(
   '/students/:studentId',
+  validateBody(patchStudentSchema),
   ctrlWrapper(patchStudentController),
 );
 

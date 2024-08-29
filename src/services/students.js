@@ -21,12 +21,34 @@ export const getAllStudents = async ({
   perPage = 5,
   sortBy = '_id',
   sortOrder = 'asc',
+  filter = {},
 }) => {
   const skip = perPage * (page - 1);
 
+  const studentsQuery = Student.find();
+
+  if (filter.minAge) {
+    studentsQuery.where("age").gte(filter.minAge);
+  }
+  if (filter.maxAge) {
+    studentsQuery.where("age").lte(filter.maxAge);
+  }
+  if (filter.minAvgMark) {
+    studentsQuery.where("avgMark").gte(filter.minAvgMark);
+  }
+  if (filter.maxAvgMark) {
+    studentsQuery.where("avgMark").lte(filter.maxAvgMark);
+  }
+  if (filter.gender) {
+    studentsQuery.where("gender").equals(filter.gender);
+  }
+  if (filter.onDuty !== undefined) {
+    studentsQuery.where("onDuty").equals(filter.onDuty);
+  }
+
   const [studentsCount, students] = await Promise.all([
-    Student.find().countDocuments(),
-    Student.find().skip(skip).limit(perPage).sort({
+    studentsQuery.clone().countDocuments(),
+    studentsQuery.skip(skip).limit(perPage).sort({
       [sortBy]: sortOrder
     }),
   ]);
@@ -36,6 +58,7 @@ export const getAllStudents = async ({
     perPage,
     studentsCount,
   );
+
   return {
     students,
     ...paginationInformation,

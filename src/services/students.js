@@ -47,7 +47,7 @@ export const getAllStudents = async ({
   }
 
   const [studentsCount, students] = await Promise.all([
-    studentsQuery.clone().countDocuments(),
+    Student.find().merge(studentsQuery).countDocuments(),
     studentsQuery.skip(skip).limit(perPage).sort({
       [sortBy]: sortOrder
     }),

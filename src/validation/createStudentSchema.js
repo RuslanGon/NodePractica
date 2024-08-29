@@ -5,6 +5,6 @@ export const createStudentSchema = Joi.object({
   age: Joi.number().integer().required().min(7).max(17),
   gender: Joi.string().required().valid('male', 'female', 'other'),
   avgMark: Joi.number().required().min(1).max(12),
-  onDuty: Joi.boolean().optional(),
+  onDuty: Joi.boolean(),
 });
 

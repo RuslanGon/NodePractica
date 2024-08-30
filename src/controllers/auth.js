@@ -14,6 +14,8 @@ export const registorUserController = async (req, res, next) => {
 export const loginUserController = async (req, res, next) => {
   const session = await loginUser(req.body);
 
+res.cookies
+
   res.json({
     status: 200,
     message: 'User is logged in',

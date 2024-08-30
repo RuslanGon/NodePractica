@@ -3,10 +3,8 @@ import { Schema, model } from 'mongoose';
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    age: { type: Number, required: true },
-    gender: { type: String, required: true, enum: ['male', 'female', 'other'] },
-    avgMark: { type: Number, required: true, min: 1, max: 12 },
-    onDuty: { type: Boolean, default: false },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true }
   },
   {
     timestamps: true,
@@ -14,4 +12,4 @@ const userSchema = new Schema(
   },
 );
 
-export const Student = model('students', userSchema);
+export const User = model('users', userSchema);

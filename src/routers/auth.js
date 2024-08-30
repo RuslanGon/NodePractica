@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../middlewares/ctrlWrapper.js';
-import { loginUserController, registorUserController } from '../controllers/auth.js';
+import { loginUserController, logoutUserController, registorUserController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { registorUserSchema } from '../validation/registerUserSchema.js';
 import { loginUserSchema } from '../validation/loginUserSchema.js';
@@ -18,7 +18,8 @@ validateBody(loginUserSchema),
 ctrlWrapper(loginUserController));
 
 authRouter.post('/refresh-token');
-authRouter.post('/logout');
+authRouter.post('/logout',
+ ctrlWrapper(logoutUserController));
 
 export default authRouter;
 

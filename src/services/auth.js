@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 import { User } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import { Session } from '../db/models/session.js';
 
 export const createUser = async (payload) => {
   const saltRounds = 10; // Обычно используется 10 итераций
@@ -29,9 +30,12 @@ export const loginUser = async ({ email, password }) => {
     const accessToken = crypto.randomBytes(32).toString('base64');
     const refreshToken = crypto.randomBytes(32).toString('base64');
 
-    return {
-      user: user.toJSON(), // Возвращаем пользователя без пароля
-      accessToken,
-      refreshToken
-    };
+    return await Session.create({
+accessToken,
+refreshToken,
+userId: user._id,
+accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 минут,
+refreshTokenValibUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 дней
+    });
+
   };

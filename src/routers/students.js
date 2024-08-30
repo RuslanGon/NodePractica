@@ -16,30 +16,30 @@ import { patchStudentSchema } from '../validation/patchStudentSchema.js';
 
 const studentsRouter = Router();
 
-studentsRouter.use('/students/:studentId', validateMongoId('studentId'), );
+studentsRouter.use('/:studentId', validateMongoId('studentId'), );
 
-studentsRouter.get('/students', ctrlWrapper(getStudentsController));
+studentsRouter.get('/', ctrlWrapper(getStudentsController));
 
 studentsRouter.get(
-  '/students/:studentId',
+  '/:studentId',
   ctrlWrapper(getStudentByIdController),
 );
 
-studentsRouter.post('/students', validateBody(createStudentSchema), ctrlWrapper(createStudentController));
+studentsRouter.post('/', validateBody(createStudentSchema), ctrlWrapper(createStudentController));
 
 studentsRouter.patch(
-  '/students/:studentId',
+  '/:studentId',
   validateBody(patchStudentSchema),
   ctrlWrapper(patchStudentController),
 );
 
 studentsRouter.put(
-  '/students/:studentId',
+  '/:studentId',
   ctrlWrapper(putStudentController),
 );
 
 studentsRouter.delete(
-  '/students/:studentId',
+  '/:studentId',
   ctrlWrapper(deleteStudentController),
 );
 

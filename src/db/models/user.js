@@ -12,4 +12,10 @@ const userSchema = new Schema(
   },
 );
 
+userSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password; // Удаляем пароль из возвращаемого объекта
+  return obj;
+};
+
 export const User = model('users', userSchema);

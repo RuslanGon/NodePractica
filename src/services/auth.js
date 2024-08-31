@@ -4,6 +4,16 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { Session } from '../db/models/session.js';
 
+const createSession = () => {
+
+  return {
+    accessToken: crypto.randomBytes(32).toString('base64'),
+    refreshToken: crypto.randomBytes(32).toString('base64'),
+    accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 минут
+    refreshTokenValidUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 дней
+  };
+};
+
 export const createUser = async (payload) => {
     const saltRounds = 10; // Обычно используется 10 итераций
     const hashedPassword = await bcrypt.hash(payload.password, saltRounds);
@@ -27,21 +37,13 @@ export const createUser = async (payload) => {
       throw createHttpError(401, 'Unauthorized');
     }
 
-    const accessToken = crypto.randomBytes(32).toString('base64');
-    const refreshToken = crypto.randomBytes(32).toString('base64');
-
     const session = await Session.create({
-      accessToken,
-      refreshToken,
       userId: user._id,
-      accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 минут
-      refreshTokenValidUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 дней
+      ...createSession()
     });
 
     return {
-      user: user.toJSON(), // Возвращаем пользователя без пароля
-      accessToken,
-      refreshToken,
+      user: user.toJSON(),
       sessionId: session._id
     };
   };
@@ -63,8 +65,20 @@ export const createUser = async (payload) => {
       throw new createHttpError(401, 'Session not found');
     }
 
-    if (new Date() > session.refreshTokenValibUntil){
+    if (new Date() > session.refreshTokenValidUntil){
       throw new createHttpError(401, 'Refresh token is expired');
 
     }
+
+    const user = await User.findById(session.userId);
+
+    if (!user) {
+      throw new createHttpError(401, 'Session not found');
+    }
+
+    return await Session.create({
+      userId: user._id,
+      ...createSession()
+    });
+
   };

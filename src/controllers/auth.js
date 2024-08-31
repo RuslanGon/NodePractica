@@ -1,6 +1,18 @@
 
+import { createUser, loginUser, logoutUser, refreshSession } from '../services/auth.js';
 
-import { createUser, loginUser, logoutUser, refreshSessoin } from '../services/auth.js';
+const setupSessionCookies = (res, session) => {
+
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    } );
+
+    res.cookie('sessionToken', session.refreshToken, {
+      httpOnly: true,
+      expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      } );
+};
 
 export const registorUserController = async (req, res, next) => {
   const user = await createUser(req.body);
@@ -15,15 +27,7 @@ export const registorUserController = async (req, res, next) => {
 export const loginUserController = async (req, res, next) => {
   const session = await loginUser(req.body);
 
-res.cookie('sessionId', session._id, {
-httpOnly: true,
-expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-} );
-
-res.cookie('sessionToken', session.refreshToken, {
-  httpOnly: true,
-  expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  } );
+  setupSessionCookies(res, session);
 
   res.json({
     status: 200,
@@ -52,21 +56,13 @@ res.clearCookie('sessionToken');
 
 export const refreshTokenController = async (req, res, next) => {
 const { sessionId, sessionToken } = req.cookies;
-const session = await refreshSessoin({ sessionId, sessionToken });
+const session = await refreshSession({ sessionId, sessionToken });
 
-res.cookie('sessionId', session._id, {
-  httpOnly: true,
-  expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  } );
-
-  res.cookie('sessionToken', session.refreshToken, {
-    httpOnly: true,
-    expire: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    } );
+setupSessionCookies(res, session);
 
     res.json({
       status: 200,
-      message: 'User is logged in',
+      message: 'Token refreshed successfully',
       data: { accessToken: session.accessToken  },
     });
 };

@@ -55,7 +55,7 @@ export const createUser = async (payload) => {
     });
   };
 
-  export const refreshSessoin = async ({ sessionId, sessionToken }) => {
+  export const refreshSession = async ({ sessionId, sessionToken }) => {
     const session = await Session.findOne({
       _id: sessionId,
       refreshToken: sessionToken,
@@ -75,6 +75,8 @@ export const createUser = async (payload) => {
     if (!user) {
       throw new createHttpError(401, 'Session not found');
     }
+
+    await Session.deleteOne({ _id: sessionId});
 
     return await Session.create({
       userId: user._id,

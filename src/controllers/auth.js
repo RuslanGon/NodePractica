@@ -48,3 +48,8 @@ res.clearCookie('sessionToken');
     data: { },
   });
 };
+
+
+export const refreshTokenController = () => {
+
+};

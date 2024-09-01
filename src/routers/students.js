@@ -13,6 +13,7 @@ import { validateMongoId } from '../middlewares/validateMongoId.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { createStudentSchema } from '../validation/createStudentSchema.js';
 import { patchStudentSchema } from '../validation/patchStudentSchema.js';
+import { checkRoles } from '../middlewares/checkRoles.js';
 // import { authenticate } from '../middlewares/authenticate.js';
 
 const studentsRouter = Router();
@@ -27,10 +28,15 @@ studentsRouter.get(
   ctrlWrapper(getStudentByIdController),
 );
 
-studentsRouter.post('/', validateBody(createStudentSchema), ctrlWrapper(createStudentController));
+studentsRouter.post(
+  '/',
+  validateBody(createStudentSchema),
+  ctrlWrapper(createStudentController),
+);
 
 studentsRouter.patch(
   '/:studentId',
+  checkRoles('teacher', 'parent'),
   validateBody(patchStudentSchema),
   ctrlWrapper(patchStudentController),
 );

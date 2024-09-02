@@ -1,8 +1,12 @@
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 import { User } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { Session } from '../db/models/session.js';
+import { env } from '../utils/env.js';
+import { ENV_VARS } from '../constants/index.js';
+import { sendMail } from '../utils/sendMail.js';
 
 const createSession = () => {
 
@@ -90,5 +94,24 @@ export const createUser = async (payload) => {
     if (!user) {
       throw createHttpError(404, 'User is not found');
     }
+    const token = jwt.sign({ email }, env(ENV_VARS.JWT_SECRET), {
+      expiresIn: '5m',
+    });
 
+    try {
+      const resetLink = `https://yourdomain.com/reset-password?token=${token}`;
+      await sendMail({
+        html: `
+        <h1>Hello ${user.name}</h1>
+        <p>Here is your reset link: <a href="${resetLink}">Reset your password</a></p>
+      `,
+        to: email,
+        from: env(ENV_VARS.SMTP_USER),
+        subject: 'Reset your password',
+      });
+    } catch (error) {
+      console.log(error);
+      throw createHttpError(500, 'Problem sending email');
+
+    }
   };

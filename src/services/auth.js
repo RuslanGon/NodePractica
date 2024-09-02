@@ -84,3 +84,8 @@ export const createUser = async (payload) => {
     });
 
   };
+
+
+  export const emailUser = async (email) => {
+
+  };

@@ -1,5 +1,5 @@
 
-import { createUser, loginUser, logoutUser, refreshSession } from '../services/auth.js';
+import { createUser, emailUser, loginUser, logoutUser, refreshSession } from '../services/auth.js';
 
 const setupSessionCookies = (res, session) => {
 
@@ -65,4 +65,15 @@ setupSessionCookies(res, session);
       message: 'Token refreshed successfully',
       data: { accessToken: session.accessToken  },
     });
+};
+
+
+export const emailController = async(req, res) => {
+await emailUser(req.body.email);
+
+res.json({
+  status: 200,
+  message: 'Reset password email was successfully',
+  data: {},
+});
 };

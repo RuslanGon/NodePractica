@@ -62,18 +62,18 @@ export const createUser = async (payload) => {
     });
 
     if (!session) {
-      throw new createHttpError(401, 'Session not found');
+      throw createHttpError(401, 'Session not found');
     }
 
     if (new Date() > session.refreshTokenValidUntil){
-      throw new createHttpError(401, 'Refresh token is expired');
+      throw createHttpError(401, 'Refresh token is expired');
 
     }
 
     const user = await User.findById(session.userId);
 
     if (!user) {
-      throw new createHttpError(401, 'Session not found');
+      throw createHttpError(401, 'Session not found');
     }
 
     await Session.deleteOne({ _id: sessionId});
@@ -85,7 +85,10 @@ export const createUser = async (payload) => {
 
   };
 
-
   export const emailUser = async (email) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw createHttpError(404, 'User is not found');
+    }
 
   };

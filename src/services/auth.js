@@ -94,7 +94,7 @@ export const createUser = async (payload) => {
     if (!user) {
       throw createHttpError(404, 'User is not found');
     }
-    const token = jwt.sign({ email }, env(ENV_VARS.JWT_SECRET), {
+    const token = jwt.sign({ email, sub: user._id }, env(ENV_VARS.JWT_SECRET), {
       expiresIn: '5m',
     });
 
@@ -106,7 +106,7 @@ export const createUser = async (payload) => {
         <p>Here is your reset link: <a href="${resetLink}">Reset your password</a></p>
       `,
         to: email,
-        from: env(ENV_VARS.SMTP_USER),
+        from: env(ENV_VARS.SMTP_FROM),
         subject: 'Reset your password',
       });
     } catch (error) {
@@ -114,4 +114,31 @@ export const createUser = async (payload) => {
       throw createHttpError(500, 'Problem sending email');
 
     }
+  };
+
+  export const resetPassword = async ({ token, password }) => {
+    let tokenPayload;
+
+    try {
+      tokenPayload = jwt.verify(token, env(ENV_VARS.JWT_SECRET));
+    } catch (error) {
+      console.log(error);
+      throw createHttpError(401, 'Invalid or expired token');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.findOneAndUpdate(
+      { _id: tokenPayload.sub, email: tokenPayload.email },
+      { password: hashedPassword }
+    );
+
+    if (!user) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    return {
+      status: 'success',
+      message: 'Password has been reset successfully',
+    };
   };

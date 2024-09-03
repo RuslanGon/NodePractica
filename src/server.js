@@ -23,7 +23,7 @@ export const startServer = () => {
 
   app.use(cookiesParser());
 
-  app.use("/upload", express.static(UPLOAD_DIR));
+  app.use('/upload', express.static(UPLOAD_DIR));
 
   app.use(express.json());
 

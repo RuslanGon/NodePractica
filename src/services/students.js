@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import { Student } from "../db/models/student.js";
+import { uploadFileLS } from "../utils/uploadFileLS.js";
 
 export const createInformationPagination = (page, perPage, count) => {
   const totalPages = Math.ceil(count / perPage);
@@ -73,8 +74,9 @@ throw createHttpError(404, 'Student not found');
 return student;
 };
 
-export const createStudent = async (payload) => {
-  const student = await Student.create(payload);
+export const createStudent = async ({avatar, ...payload}) => {
+const url = uploadFileLS(avatar);
+  const student = await Student.create({ ...payload, avatarUrl: url });
   return student;
 };
 

@@ -34,8 +34,8 @@ const filter = parseFilters(req.query);
   };
 
   export const createStudentController = async (req, res, next) => {
-    const { body } = req;
-    const student = await createStudent(body);
+    const { body, file } = req;
+    const student = await createStudent({...body, avatar: file});
     res.status(201).json({
         status: 201,
         message: `successfully created student`,

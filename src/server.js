@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import { ENV_VARS } from './constants/index.js';
+import { ENV_VARS, UPLOAD_DIR } from './constants/index.js';
 import { notFoundMiddleware } from './middlewares/notFoutdMiddleware.js';
 import { errorhandlerMiddleware } from './middlewares/errorhandlerMiddleware.js';
 import rootRouter from './routers/index.js';
@@ -22,6 +22,8 @@ export const startServer = () => {
   app.use(cors());
 
   app.use(cookiesParser());
+
+  app.use("/upload", express.static(UPLOAD_DIR));
 
   app.use(express.json());
 

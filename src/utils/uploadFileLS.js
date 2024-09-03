@@ -8,7 +8,7 @@ const newPath = path.join(UPLOAD_DIR, file.filename);
 await fs.writeFile(newPath, content);
 await fs.unlink(file.path);
 
-const url = `/upload/${file.filename}`;
+const url = `/uploads/${file.filename}`;
 
 return url;
 };

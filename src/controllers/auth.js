@@ -97,3 +97,13 @@ message: 'Successfully received OAuth URL',
 data: {url}
 });
 };
+
+export const verifyOAuthController = (req, res) => {
+  const {code} = req.body;
+  const url = generateOAuthURL();
+  res.json({
+  status: 200,
+  message: 'Successfully received OAuth URL',
+  data: {url}
+  });
+  };

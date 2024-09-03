@@ -1,7 +1,5 @@
 {
     "project_id": "your-google-cloud-project-id",
-    "client_id": "your-client-id.apps.googleusercontent.com",
-    "client_secret": "your-client-secret",
     "api_key": "your-google-api-key",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
     "token_uri": "https://oauth2.googleapis.com/token",

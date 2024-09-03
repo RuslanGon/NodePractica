@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../middlewares/ctrlWrapper.js';
-import { emailController, loginUserController, logoutUserController, refreshTokenController, registorUserController, resetPassworController } from '../controllers/auth.js';
+import { emailController, getOAuthUrlController, loginUserController, logoutUserController, refreshTokenController, registorUserController, resetPassworController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { registorUserSchema } from '../validation/registerUserSchema.js';
 import { loginUserSchema } from '../validation/loginUserSchema.js';
@@ -36,6 +36,8 @@ authRouter.post(
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPassworController),
 );
+
+authRouter.post('/get-oauth-url', ctrlWrapper(getOAuthUrlController) );
 
 export default authRouter;
 

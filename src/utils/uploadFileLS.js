@@ -1,5 +1,14 @@
-import fs from 'node:child_process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { UPLOAD_DIR } from '../constants/index.js';
 
-export const uploadFileLS = (file) => {
-return 'url';
+export const uploadFileLS = async (file) => {
+const content = await fs.readFile(file.path);
+const newPath = path.join(UPLOAD_DIR, file.filename);
+await fs.writeFile(newPath, content);
+await fs.unlink(file.path);
+
+const url = `/upload/${file.filename}`;
+
+return url;
 };

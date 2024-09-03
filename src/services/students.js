@@ -74,8 +74,8 @@ throw createHttpError(404, 'Student not found');
 return student;
 };
 
-export const createStudent = async ({avatar, ...payload}) => {
-const url = uploadFileLS(avatar);
+export const createStudent = async ({ avatar, ...payload }) => {
+  const url = await uploadFileLS(avatar);
   const student = await Student.create({ ...payload, avatarUrl: url });
   return student;
 };

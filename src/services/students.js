@@ -1,6 +1,7 @@
 import createHttpError from "http-errors";
 import { Student } from "../db/models/student.js";
-import { uploadFileLS } from "../utils/uploadFileLS.js";
+// import { uploadFileLS } from "../utils/uploadFileLS.js";
+import { saveToCloudinary } from "../utils/saveToCloudinary.js";
 
 export const createInformationPagination = (page, perPage, count) => {
   const totalPages = Math.ceil(count / perPage);
@@ -75,7 +76,9 @@ return student;
 };
 
 export const createStudent = async ({ avatar, ...payload }) => {
-  const url = await uploadFileLS(avatar);
+  // const url = await uploadFileLS(avatar);
+  const url = await saveToCloudinary(avatar);
+
   const student = await Student.create({ ...payload, avatarUrl: url });
   return student;
 };

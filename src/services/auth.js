@@ -10,6 +10,7 @@ import { Session } from '../db/models/session.js';
 import { env } from '../utils/env.js';
 import { ENV_VARS, TEMPLATE_DIR } from '../constants/index.js';
 import { sendMail } from '../utils/sendMail.js';
+import { validateGoogleCode } from '../utils/googleOAuth.js';
 
 const createSession = () => {
 
@@ -147,3 +148,7 @@ link:  `https://yourdomain.com/reset-password?token=${token}`
       message: 'Password has been reset successfully',
     };
   };
+
+export const loginOrSingUpGoogleOAuth = async (code) => {
+return await validateGoogleCode(code);
+};

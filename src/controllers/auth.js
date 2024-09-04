@@ -1,5 +1,5 @@
 
-import { createUser, emailUser, loginUser, logoutUser, refreshSession, resetPassword } from '../services/auth.js';
+import { createUser, emailUser, loginOrSingUpGoogleOAuth, loginUser, logoutUser, refreshSession, resetPassword } from '../services/auth.js';
 import { generateOAuthURL } from '../utils/googleOAuth.js';
 
 const setupSessionCookies = (res, session) => {
@@ -98,9 +98,9 @@ data: {url}
 });
 };
 
-export const verifyOAuthController = (req, res) => {
+export const verifyOAuthController = async (req, res) => {
   const {code} = req.body;
-  const url = generateOAuthURL();
+  const url = await loginOrSingUpGoogleOAuth(code);
   res.json({
   status: 200,
   message: 'Successfully received OAuth URL',

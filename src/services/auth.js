@@ -152,20 +152,24 @@ link:  `https://yourdomain.com/reset-password?token=${token}`
 export const loginOrSingUpGoogleOAuth = async (code) => {
 const payload =  await validateGoogleCode(code);
 
-if(!payload) throw createHttpError(401);
+if (!payload) throw createHttpError(401, 'Google OAuth authentication failed');
 
-let user = await User.findOne({email:payload.email});
+  let user = await User.findOne({ email: payload.email });
 
-if(!user){
-  user = await User.create({
-    name: payload.given_name + '' + payload.family_name,
-    password: await bcrypt.hash(crypto.randomBytes(32).toString('base64'))
+  if (!user) {
+    const hashPassword = await bcrypt.hash(crypto.randomBytes(32).toString('base64'), 10);
+    user = await User.create({
+      name: payload.given_name + ' ' + payload.family_name,
+      email: payload.email,  // Добавление email в поле пользователя
+      password: hashPassword,
+    });
+  }
+
+  // Логика создания сессии
+  const session = await Session.create({
+    userId: user._id,
+    ...createSession(),  // Используйте вашу функцию для создания сессии
   });
-  return;
-}
 
-return await Session.create({
-  userId: user._id,
-  ...createSession()
-});
+  return session;  // Возвращаем созданную сессию
 };

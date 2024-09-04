@@ -160,7 +160,7 @@ if (!payload) throw createHttpError(401, 'Google OAuth authentication failed');
     const hashPassword = await bcrypt.hash(crypto.randomBytes(32).toString('base64'), 10);
     user = await User.create({
       name: payload.given_name + ' ' + payload.family_name,
-      email: payload.email,  // Добавление email в поле пользователя
+      email: payload.email,
       password: hashPassword,
     });
   }
@@ -168,8 +168,8 @@ if (!payload) throw createHttpError(401, 'Google OAuth authentication failed');
   // Логика создания сессии
   const session = await Session.create({
     userId: user._id,
-    ...createSession(),  // Используйте вашу функцию для создания сессии
+    ...createSession(),
   });
 
-  return session;  // Возвращаем созданную сессию
+  return session;
 };

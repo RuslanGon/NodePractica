@@ -99,11 +99,14 @@ data: {url}
 };
 
 export const verifyOAuthController = async (req, res) => {
-  const {code} = req.body;
-  const ticket = await loginOrSingUpGoogleOAuth(code);
+  const { code } = req.body;
+  const session = await loginOrSingUpGoogleOAuth(code);
+
+  setupSessionCookies(res, session);
+
   res.json({
-  status: 200,
-  message: 'Successfully received OAuth URL',
-  data: {ticket}
+    status: 200,
+    message: 'Logget in with Google OAuth',
+    data: { accessToken: session.accessToken },
   });
-  };
+};

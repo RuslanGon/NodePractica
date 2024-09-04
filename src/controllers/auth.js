@@ -100,10 +100,10 @@ data: {url}
 
 export const verifyOAuthController = async (req, res) => {
   const {code} = req.body;
-  const url = await loginOrSingUpGoogleOAuth(code);
+  const ticket = await loginOrSingUpGoogleOAuth(code);
   res.json({
   status: 200,
   message: 'Successfully received OAuth URL',
-  data: {url}
+  data: {ticket}
   });
   };

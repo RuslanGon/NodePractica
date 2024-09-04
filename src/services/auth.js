@@ -150,5 +150,22 @@ link:  `https://yourdomain.com/reset-password?token=${token}`
   };
 
 export const loginOrSingUpGoogleOAuth = async (code) => {
-return await validateGoogleCode(code);
+const payload =  await validateGoogleCode(code);
+
+if(!payload) throw createHttpError(401);
+
+let user = await User.findOne({email:payload.email});
+
+if(!user){
+  user = await User.create({
+    name: payload.given_name + '' + payload.family_name,
+    password: await bcrypt.hash(crypto.randomBytes(32).toString('base64'))
+  });
+  return;
+}
+
+return await Session.create({
+  userId: user._id,
+  ...createSession()
+});
 };

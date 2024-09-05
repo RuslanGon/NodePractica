@@ -1,15 +1,16 @@
 import createHttpError from 'http-errors';
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import swaggerUi from 'swagger-ui-express';
+import { SWAGGER } from '../constants/index.js';
 
-export const swagger = () => {
+export const swagger = async () => {
   try {
-    const swaggerDocument = fs.readFileSync(path.join(process.cwd(), 'docs', 'swagger.json'));
-    return [swaggerUi.serve, swaggerUi.setup(swaggerDocument)];
+    const swaggerDocument = JSON.parse(fs.readFileSync(SWAGGER).toString()) ;
+    return [...swaggerUi.serve, swaggerUi.setup(swaggerDocument)];
   } catch (error) {
     console.log(error);
-    return (req, res, next) =>
-    next(createHttpError(500, 'Swagger file is not found')) ;
+return (req, res, next) =>
+    next(createHttpError(500, 'Swagger file is not found'));
   }
 };
+

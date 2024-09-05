@@ -6,6 +6,9 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src/**/*.js",
+    "preview-docs": "redocly preview-docs",
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle --ext json -o docs/swagger.json",
     "start": "node ./src/index.js",
     "dev": "nodemon src/index.js"
   },
@@ -19,6 +22,7 @@
     "nodemon": "^3.1.0"
   },
   "dependencies": {
+    "@redocly/cli": "^1.22.1",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.4.0",
     "cookie-parser": "^1.4.6",

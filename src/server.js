@@ -21,15 +21,6 @@ export const startServer = () => {
   );
 
 
-// app.use('/api-docs', swagger());
-app.use('/api-docs', async (req, res, next) => {
-  try {
-    const swaggerMiddleware = await swagger();
-    swaggerMiddleware(req, res, next);
-  } catch (error) {
-    next(error);
-  }
-});
 
   app.use(cors());
 
@@ -44,6 +35,16 @@ app.use('/api-docs', async (req, res, next) => {
   app.use(notFoundMiddleware);
 
   app.use(errorhandlerMiddleware);
+
+  // app.use('/api-docs', swagger());
+app.use('/api-docs', async (req, res, next) => {
+  try {
+    const swaggerMiddleware = await swagger();
+    swaggerMiddleware(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+});
 
   const PORT = env(ENV_VARS.PORT, 3000);
   app.listen(PORT, () => {
